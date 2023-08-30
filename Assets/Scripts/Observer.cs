@@ -35,10 +35,18 @@ public class Observer : MonoBehaviour
         bool retValue = false;
         if (holderItem != null)
         {
-            retValue = true;
-            Debug.Log("-- Item " + holderItem.name + " remove");
-            holderItem = null;  
+            if (gameObject.GetComponent<CellsGenerator>().SetHoldingItem(holderItem))
+            {
+                retValue = true;
+                Debug.Log("-- Item " + holderItem.name + " remove");
+                holderItem = null;
+            }
         }
         return retValue;
+    }
+
+    public GameObject GetHoldingItem()
+    {
+        return holderItem;
     }
 }

@@ -66,4 +66,38 @@ public class CellsGenerator : MonoBehaviour
 
         return retValue;
     }
+
+    public bool SetHoldingItem(GameObject inputItem)
+    {
+        bool retValye = false;
+        Vector2Int itemCoords = GetCurrentCells();
+        if (itemCoords.x >= 0 && cellsPlace[itemCoords.x][itemCoords.y])
+        {
+            Debug.Log("Right coords and free space");
+            cellsPlace[itemCoords.x][itemCoords.y] = false;
+            inputItem.transform.position = cells[itemCoords.x][itemCoords.y].transform.position;
+            cells[itemCoords.x][itemCoords.y].GetComponent<CellsScript>().SetHoldingItem(inputItem);
+            //Hold item in this cells, may be create GameObject matirx?
+        }
+        return retValye;
+    }
+
+    public Vector2Int GetCurrentCells()
+    {
+        Vector2Int retItem = new Vector2Int(-1,-1);
+        for (int i = 0; i < cells.Length; i++)
+        {
+            for (int j = 0; j < cells[i].Length; j++)
+            {
+                if(cells[i][j].GetComponent<CellsScript>().CheckCoord(Input.mousePosition))
+                {
+                    retItem = new Vector2Int(i, j);
+                    i = cells.Length;
+                    Debug.Log("Find ret Item");
+                    break;
+                }
+            }
+        }
+        return retItem;
+    }
 }
