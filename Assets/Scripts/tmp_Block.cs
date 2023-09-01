@@ -11,6 +11,8 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private GameObject observer;
 
+    //
+    private CellsScript currentCell;
     private bool canMove = false;
     // Start is called before the first frame update
     void Start()
@@ -29,6 +31,7 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        ClearCurrentCell();
         canMove = true;
         observer.GetComponent<Observer>().HoldingItem(this.gameObject);
     }
@@ -37,6 +40,31 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         canMove= false;
         observer.GetComponent<Observer>().ClearItem();
+    }
+
+    public bool SetCurrentCell(CellsScript inputCells)
+    {
+        bool retValue = false;
+        Debug.LogWarning("Try set current cell");
+        if(currentCell == null)
+        {
+            Debug.Log("Set current cells");
+            currentCell = inputCells;
+            retValue = true;
+        }
+        return retValue;
+    }
+
+    public bool ClearCurrentCell()
+    {
+        bool retValue = false;
+        if(currentCell != null)
+        {
+            Debug.Log("Remove current cells");
+            currentCell.RemoveHoldingItem();
+            currentCell = null;
+        }
+        return retValue;
     }
 
 }

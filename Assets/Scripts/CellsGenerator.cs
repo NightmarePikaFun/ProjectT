@@ -46,6 +46,7 @@ public class CellsGenerator : MonoBehaviour
                 cellsPlace[i][j] = true;
                 cells[i][j] = Instantiate(cellObject, parentObject);
                 cells[i][j].transform.position = new Vector3(-startPositionX + betweenLenght * j + cellsSize * j, -startPositionY + betweenLenght * i + cellsSize * i,0) + parentObject.position;
+                cells[i][j].GetComponent<CellsScript>().SetGridPosition(new Vector2Int(i, j));
             }
         }
     }
@@ -99,5 +100,10 @@ public class CellsGenerator : MonoBehaviour
             }
         }
         return retItem;
+    }
+
+    public void ClearCellSpace(Vector2Int inputCoords)
+    {
+        cellsPlace[inputCoords.x][inputCoords.y] = true;
     }
 }

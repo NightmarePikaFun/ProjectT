@@ -13,6 +13,8 @@ public class CellsScript : MonoBehaviour
     private Color mouseOverColor;
     [SerializeField]
     private Color holdItemColor;
+    [SerializeField]
+    private List<Color> sideColor;
 
     private Vector2Int gridPosition;
 
@@ -45,7 +47,8 @@ public class CellsScript : MonoBehaviour
                 }
             case 1:
                 {
-                    tmpGOColor = mouseOverColor;
+                    //tmpGOColor = mouseOverColor;
+                    tmpGOColor = TMPSetColor(mousePos, transform.position);
                     break;
                 }
             case 2:
@@ -61,6 +64,17 @@ public class CellsScript : MonoBehaviour
         
     }
         transform.gameObject.GetComponent<Image>().color = tmpGOColor;
+    }
+
+    private Color TMPSetColor(Vector3 coord, Vector3 area)
+    {
+        Color retColor = Color.cyan;
+        int number = FindQuadSide(coord, area);
+        if(number>0)
+        {
+            retColor = sideColor[number - 1];
+        }
+        return retColor;
     }
 
     private int checkCoord(Vector3 coord, Vector3 area)
@@ -83,6 +97,35 @@ public class CellsScript : MonoBehaviour
         return retValue;
     }
 
+    private int FindQuadSide(Vector3 inputPosition, Vector3 currentPosition)
+    {
+        int retValue = 0;
+        Vector3 relativePos = inputPosition - currentPosition;
+        if(relativePos.x > 0)
+        {
+            if(relativePos.y > 0)
+            {
+                retValue = 2;
+            }
+            else
+            {
+                retValue = 3;
+            }
+        }
+        else
+        {
+            if (relativePos.y > 0)
+            {
+                retValue = 1;
+            }
+            else
+            {
+                retValue = 4;
+            }
+        }
+        return retValue;
+    }
+
     public bool CheckCoord(Vector3 inputPosition)
     {
         //Change this;
@@ -96,13 +139,13 @@ public class CellsScript : MonoBehaviour
         return retValue;
     }
 
-
     #region HoldingItem
     public bool SetHoldingItem(GameObject inputItem)
     {
         bool retValue = false;
         holdingItem = inputItem;
         cellState = 2;
+        inputItem.GetComponent<tmp_Block>().SetCurrentCell(this);
         //tmpGenerator.SetHoldingItem(inputItem, gridPosition);
         return retValue;
     }
@@ -110,6 +153,18 @@ public class CellsScript : MonoBehaviour
     public GameObject GetHoldingItem()
     {
         return holdingItem;
+    }
+
+    public bool RemoveHoldingItem()
+    {
+        bool retValue = false;
+        if(holdingItem != null)
+        {
+            cellState = 0;
+            tmpGenerator.ClearCellSpace(gridPosition);
+            holdingItem = null;
+        }
+        return retValue;
     }
     #endregion
 
