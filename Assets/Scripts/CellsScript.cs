@@ -97,6 +97,12 @@ public class CellsScript : MonoBehaviour
         return retValue;
     }
 
+
+    public int GetQuadSied()
+    {
+        return FindQuadSide(Input.mousePosition, transform.position);
+    }
+
     private int FindQuadSide(Vector3 inputPosition, Vector3 currentPosition)
     {
         int retValue = 0;

@@ -18,6 +18,7 @@ public class Observer : MonoBehaviour
         
     }
 
+
     public bool HoldingItem(GameObject inputItem)
     {
         bool retValue = false;
@@ -25,7 +26,7 @@ public class Observer : MonoBehaviour
         {
             holderItem = inputItem;
             retValue = true;
-            Debug.Log("-- Item " + holderItem.name + " holding");
+            //Debug.Log("-- Item " + holderItem.name + " holding");
         }
         return retValue;
     }
@@ -38,10 +39,11 @@ public class Observer : MonoBehaviour
             if (gameObject.GetComponent<CellsGenerator>().SetHoldingItem(holderItem))
             {
                 retValue = true;
-                Debug.Log("-- Item " + holderItem.name + " remove");
-                holderItem = null;
+                
             }
         }
+        //Debug.Log("-- Item " + holderItem.name + " remove");
+        holderItem = null;
         return retValue;
     }
 

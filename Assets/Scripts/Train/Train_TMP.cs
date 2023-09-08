@@ -17,11 +17,13 @@ public class Train_TMP : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            GetComponent<Rigidbody>().AddForce(new Vector3(speed,0,0));
+            GetComponent<WheelCollider>().motorTorque = speed;
+            //GetComponent<Rigidbody>().AddTorque((new Vector3(0, 0, speed)));
         }
         if (Input.GetKey(KeyCode.S))
         {
-            GetComponent<Rigidbody>().AddForce(new Vector3(-speed, 0, 0));
+            GetComponent<WheelCollider>().motorTorque = -speed;
+            //GetComponent<Rigidbody>().AddTorque((new Vector3(0, 0, -speed)));
         }
     }
 }

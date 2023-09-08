@@ -20,9 +20,9 @@ public class CellsGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.LogWarning("Start generetion cells");
+        //Debug.LogWarning("Start generetion cells");
         Generate();
-        Debug.LogWarning("Complete generetion cells");
+        //Debug.LogWarning("Complete generetion cells");
     }
 
     // Update is called once per frame
@@ -70,17 +70,69 @@ public class CellsGenerator : MonoBehaviour
 
     public bool SetHoldingItem(GameObject inputItem)
     {
-        bool retValye = false;
+        bool retValue = false;
         Vector2Int itemCoords = GetCurrentCells();
         if (itemCoords.x >= 0 && cellsPlace[itemCoords.x][itemCoords.y])
         {
             Debug.Log("Right coords and free space");
-            cellsPlace[itemCoords.x][itemCoords.y] = false;
+            //cellsPlace[itemCoords.x][itemCoords.y] = false;
             inputItem.transform.position = cells[itemCoords.x][itemCoords.y].transform.position;
-            cells[itemCoords.x][itemCoords.y].GetComponent<CellsScript>().SetHoldingItem(inputItem);
+            //cells[itemCoords.x][itemCoords.y].GetComponent<CellsScript>().SetHoldingItem(inputItem);
+            int sideNumber = cells[itemCoords.x][itemCoords.y].GetComponent<CellsScript>().GetQuadSied();
+            Debug.Log(sideNumber);
+            Vector2Int itemHoldCoord = inputItem.GetComponent<tmp_Block>().tmpGetRightCoord(sideNumber);
+            Debug.Log(itemHoldCoord);
+            retValue = true;
+            CheckZoneCoord(itemCoords, itemHoldCoord, inputItem);
             //Hold item in this cells, may be create GameObject matirx?
         }
-        return retValye;
+        return retValue;
+    }
+
+    public bool CheckZoneCoord(Vector2Int cellCoord, Vector2Int sizeStartCoord, GameObject inputItem)
+    {
+        Debug.LogError("START ZONE CHECK ON COORD (x: "+cellCoord.x+" y: "+cellCoord.y+")");
+        //Debug.Log(cellCoord - sizeStartCoord);
+        bool retValue = true;
+        Vector2Int startCoord = cellCoord-sizeStartCoord;
+        Vector2Int sizeItemCoord = startCoord + inputItem.GetComponent<tmp_Block>().GetBlockSize();
+        Debug.Log("Start coord: " + startCoord);
+        if(startCoord.x>=0 && startCoord.y >=0)
+        {
+            for (int i = startCoord.x; i < sizeItemCoord.x; i++)
+            {
+                for (int j = startCoord.y; j < sizeItemCoord.y; j++)
+                {
+                    if (!cellsPlace[i][j])
+                    {
+                        Debug.Log("Wrong size");
+                        retValue = false;
+                        break;
+                    }
+                }
+                if(!retValue)
+                { 
+                    break;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Wrong size");
+            retValue = false;
+        }
+        if(retValue)
+        {
+            for (int i = startCoord.x; i < sizeItemCoord.x; i++)
+            {
+                for (int j = startCoord.y; j < sizeItemCoord.y; j++)
+                {
+                    cellsPlace[i][j] = false;
+                    cells[i][j].GetComponent<CellsScript>().SetHoldingItem(inputItem);
+                }
+            }
+        }
+        return retValue;
     }
 
     public Vector2Int GetCurrentCells()
@@ -94,7 +146,7 @@ public class CellsGenerator : MonoBehaviour
                 {
                     retItem = new Vector2Int(i, j);
                     i = cells.Length;
-                    Debug.Log("Find ret Item");
+                    //Debug.Log("Find ret Item");
                     break;
                 }
             }
@@ -106,4 +158,12 @@ public class CellsGenerator : MonoBehaviour
     {
         cellsPlace[inputCoords.x][inputCoords.y] = true;
     }
+
+    private void tmp()
+    {
+
+    }
+    //get number
+    //get center
+    //check coords if all can store item
 }
