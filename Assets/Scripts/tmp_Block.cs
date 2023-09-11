@@ -50,7 +50,8 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        ClearCurrentCell();
+        RemoveCurrentCells();
+        //ClearCurrentCell();
         startPostition = transform.position;
         canMove = true;
         observer.GetComponent<Observer>().HoldingItem(this.gameObject);
@@ -62,17 +63,31 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         observer.GetComponent<Observer>().ClearItem();
     }
 
-    public bool SetCurrentCell(CellsScript inputCells)
+    public bool SetCurrentCell(CellsScript inputCell)
     {
         bool retValue = false;
         //Debug.LogWarning("Try set current cell");
         if(currentCell == null)
         {
             //Debug.Log("Set current cells");
-            currentCell = inputCells;
+            currentCell = inputCell;
             retValue = true;
         }
         return retValue;
+    }
+
+    public void AddCurrentCell(CellsScript inputCell)
+    {
+        usedCells.Add(inputCell);
+    }
+
+    public void RemoveCurrentCells()
+    {
+        foreach(var cell in usedCells)
+        {
+            cell.RemoveHoldingItem();
+        }
+        usedCells.Clear();
     }
 
     public bool ClearCurrentCell()

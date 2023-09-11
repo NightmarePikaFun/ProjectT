@@ -127,6 +127,7 @@ public class CellsGenerator : MonoBehaviour
             {
                 for (int j = startCoord.y; j < sizeItemCoord.y; j++)
                 {
+                    //inputItem.GetComponent<tmp_Block>().AddCurrentCell(cells[i][j].GetComponent<CellsScript>());
                     cellsPlace[i][j] = false;
                     cells[i][j].GetComponent<CellsScript>().SetHoldingItem(inputItem);
                 }

@@ -151,7 +151,7 @@ public class CellsScript : MonoBehaviour
         bool retValue = false;
         holdingItem = inputItem;
         cellState = 2;
-        inputItem.GetComponent<tmp_Block>().SetCurrentCell(this);
+        inputItem.GetComponent<tmp_Block>().AddCurrentCell(this);//SetCurrentCell(this);
         //tmpGenerator.SetHoldingItem(inputItem, gridPosition);
         return retValue;
     }

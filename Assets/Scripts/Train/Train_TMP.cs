@@ -6,10 +6,12 @@ public class Train_TMP : MonoBehaviour
 {
     [SerializeField]
     private int speed = 10;
+
+    private Rigidbody rb;
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -17,12 +19,14 @@ public class Train_TMP : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            GetComponent<WheelCollider>().motorTorque = speed;
+            rb.AddForce(new Vector3(speed, 0, 0));
+            //GetComponent<WheelCollider>().motorTorque = speed;
             //GetComponent<Rigidbody>().AddTorque((new Vector3(0, 0, speed)));
         }
         if (Input.GetKey(KeyCode.S))
         {
-            GetComponent<WheelCollider>().motorTorque = -speed;
+            rb.AddForce(new Vector3(-speed, 0, 0));
+            //GetComponent<WheelCollider>().motorTorque = -speed;
             //GetComponent<Rigidbody>().AddTorque((new Vector3(0, 0, -speed)));
         }
     }

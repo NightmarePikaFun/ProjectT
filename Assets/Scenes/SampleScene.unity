@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c1fac0f06fd69341bd1065570aae7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  betweenLenght: 2
+  betweenLenght: -1
   cellsSize: 30
   cellsGridSize: {x: 10, y: 10}
   cellObject: {fileID: 5583863604026987589, guid: ec1354764e4442d4e8064c1a050ef993, type: 3}
@@ -436,6 +436,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1231724630993344399, guid: 5a7dbb48013d4bd4cbe997aaa17c419e, type: 3}
+      propertyPath: objectSize.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231724630993344399, guid: 5a7dbb48013d4bd4cbe997aaa17c419e, type: 3}
+      propertyPath: objectSize.y
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4063565516543755285, guid: 5a7dbb48013d4bd4cbe997aaa17c419e, type: 3}
       propertyPath: m_Color.b
       value: 0
@@ -538,7 +546,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4063565516543755304, guid: 5a7dbb48013d4bd4cbe997aaa17c419e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4905075319631654543, guid: 5a7dbb48013d4bd4cbe997aaa17c419e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
