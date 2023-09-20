@@ -79,11 +79,13 @@ public class CellsGenerator : MonoBehaviour
             inputItem.transform.position = cells[itemCoords.x][itemCoords.y].transform.position;
             //cells[itemCoords.x][itemCoords.y].GetComponent<CellsScript>().SetHoldingItem(inputItem);
             int sideNumber = cells[itemCoords.x][itemCoords.y].GetComponent<CellsScript>().GetQuadSied();
-            Debug.Log(sideNumber);
+            //Debug.Log(sideNumber);
             Vector2Int itemHoldCoord = inputItem.GetComponent<tmp_Block>().tmpGetRightCoord(sideNumber);
-            Debug.Log(itemHoldCoord);
-            retValue = true;
-            CheckZoneCoord(itemCoords, itemHoldCoord, inputItem);
+            //Debug.Log(itemHoldCoord);
+            if(CheckZoneCoord(itemCoords, itemHoldCoord, inputItem))
+            {
+                retValue = true;
+            }
             //Hold item in this cells, may be create GameObject matirx?
         }
         return retValue;
@@ -103,7 +105,7 @@ public class CellsGenerator : MonoBehaviour
             {
                 for (int j = startCoord.y; j < sizeItemCoord.y; j++)
                 {
-                    if (!cellsPlace[i][j])
+                    if (i>=cellsPlace.Length || j >= cellsPlace[i].Length || !cellsPlace[i][j])
                     {
                         Debug.Log("Wrong size");
                         retValue = false;
@@ -153,6 +155,12 @@ public class CellsGenerator : MonoBehaviour
             }
         }
         return retItem;
+    }
+
+    public void DisableCell(Vector2Int cellCoord)
+    {
+        //Debug.Log("Disable");
+        cellsPlace[cellCoord.x][cellCoord.y] = false;
     }
 
     public void ClearCellSpace(Vector2Int inputCoords)

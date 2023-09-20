@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f1e554a6de58d47b676107c783757c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selecSize: 15
+  selectSize: 15
   baseColor: {r: 0.83287174, g: 0.34509802, b: 0.9529412, a: 1}
   mouseOverColor: {r: 1, g: 0.95686275, b: 0.050980393, a: 1}
   holdItemColor: {r: 0, g: 1, b: 0.7019608, a: 1}

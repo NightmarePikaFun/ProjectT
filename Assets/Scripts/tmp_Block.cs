@@ -10,10 +10,15 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private Vector2Int objectSize;
     [SerializeField]
     private int tmpNumber;
+    [SerializeField]
+    private int weight;
 
     private GameObject observer;
 
     //
+
+    private List<CellsScript> oldCells = new List<CellsScript>();//May be only one Cells
+
     private Vector3 startPostition;
     private CellsScript currentCell;
     private bool canMove = false;
@@ -24,6 +29,7 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // Start is called before the first frame update
     void Start()
     {
+        startPostition = transform.position;
         observer = GameObject.FindGameObjectWithTag("Observer");
         centerCoordX = tmpFindCenter(objectSize.x);
         centerCoordY = tmpFindCenter(objectSize.y);
@@ -60,7 +66,16 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerUp(PointerEventData eventData)
     {
         canMove= false;
-        observer.GetComponent<Observer>().ClearItem();
+        if (!observer.GetComponent<Observer>().ClearItem())
+        {
+            if (oldCells.Count > 0)
+                ReturnToOldPosition();//Need current Point
+            transform.position = startPostition;
+        }
+        else
+        {
+            RememberActiveCells();
+        }
     }
 
     public bool SetCurrentCell(CellsScript inputCell)
@@ -163,14 +178,35 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 selectedCoordY = 0;
             }
         }
-        //return center coord +1
-        //Debug.Log("Calculated slot: x -> " + centerCoordX[selectedCoordX] +" y -> " + centerCoordY[selectedCoordY]);
-        //Debug.Log(selectedCoordX + " " + selectedCoordY);
         return new Vector2Int(centerCoordX[selectedCoordX], centerCoordY[selectedCoordY]);
+    }
+
+    public void RememberActiveCells()
+    {
+        oldCells.Clear();
+        for(int i = 0; i < usedCells.Count;i++)
+        {
+            oldCells.Add(usedCells[i]);
+        }
+    }
+
+    public bool ReturnToOldPosition()
+    {
+        bool retValue = false;
+        for(int i = 0; i < oldCells.Count;i++)
+        {
+            oldCells[i].SetHoldingItem(this.gameObject);
+        }
+        return retValue;
     }
 
     public Vector2Int GetBlockSize()
     {
         return objectSize;
     }
+
+    //TODO correct position with size and and and other!
+    //if lenghtX = 1 not correct X || if lenghtY = 1 not corretctY
+    //if lenghtX%2 = 1 correct X || if lenghtY = 1  corretctY
+    // if lenghtX%2 = 0 not correct X || if lenghtY == 0 not correctY
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CellsScript : MonoBehaviour
 {
     [SerializeField]
-    private int selecSize;
+    private int selectSize;
     [SerializeField]
     private Color baseColor;
     [SerializeField]
@@ -86,9 +86,9 @@ public class CellsScript : MonoBehaviour
         }
         else
         {
-            if (coord.x > area.x - selecSize && coord.x < area.x + selecSize)
+            if (coord.x > area.x - selectSize && coord.x < area.x + selectSize)
             {
-                if (coord.y > area.y - selecSize && coord.y < area.y + selecSize)
+                if (coord.y > area.y - selectSize && coord.y < area.y + selectSize)
                 {
                     retValue = 1;
                 }
@@ -151,6 +151,7 @@ public class CellsScript : MonoBehaviour
         bool retValue = false;
         holdingItem = inputItem;
         cellState = 2;
+        tmpGenerator.DisableCell(gridPosition);
         inputItem.GetComponent<tmp_Block>().AddCurrentCell(this);//SetCurrentCell(this);
         //tmpGenerator.SetHoldingItem(inputItem, gridPosition);
         return retValue;

@@ -19,13 +19,13 @@ public class Train_TMP : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            rb.AddForce(new Vector3(speed, 0, 0));
+            rb.AddForce(new Vector3(-speed, 0, 0));
             //GetComponent<WheelCollider>().motorTorque = speed;
             //GetComponent<Rigidbody>().AddTorque((new Vector3(0, 0, speed)));
         }
         if (Input.GetKey(KeyCode.S))
         {
-            rb.AddForce(new Vector3(-speed, 0, 0));
+            rb.AddForce(new Vector3(speed, 0, 0));
             //GetComponent<WheelCollider>().motorTorque = -speed;
             //GetComponent<Rigidbody>().AddTorque((new Vector3(0, 0, -speed)));
         }
