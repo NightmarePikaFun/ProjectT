@@ -33,6 +33,7 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         observer = GameObject.FindGameObjectWithTag("Observer");
         centerCoordX = tmpFindCenter(objectSize.x);
         centerCoordY = tmpFindCenter(objectSize.y);
+        transform.localScale = new Vector3(transform.localScale.x * objectSize.y, transform.localScale.y * objectSize.x, transform.localScale.z);
         //Debug.LogWarning("Block center coords size x: "+centerCoordX.Length+"  y: "+ centerCoordY.Length);
         for(int i = 0; i < centerCoordX.Length; i++)
         {
@@ -155,7 +156,6 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             if (number < 3)//if(number == 1 || number == 4)
             {
                 selectedCoordX = 0;
-                Debug.LogWarning("ZERO");
             }
             else
             {
@@ -203,6 +203,57 @@ public class tmp_Block : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public Vector2Int GetBlockSize()
     {
         return objectSize;
+    }
+
+    public void SetNewCoords(Vector3 inpPosition, int shift, int quadSide)
+    {
+        transform.position = inpPosition;
+        SetRightCenter(inpPosition, shift-1, quadSide);
+    }
+
+    private void SetRightCenter(Vector3 inpPosition, int shift, int quadSide)
+    {
+        if (objectSize.y == 1 || objectSize.y % 2 == 1)
+        {
+            if (objectSize.x % 2 == 0)
+            {
+                if(quadSide<3)
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y + shift, transform.position.z);
+                }
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y - shift, transform.position.z);
+                }
+                //change only Y
+                //need number side shift;
+            }
+        }
+        else
+        {
+            if (objectSize.x % 2 == 0)
+            {
+                Debug.Log("Change Y");
+                if (quadSide < 3)
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y + shift, transform.position.z);
+                }
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y - shift, transform.position.z);
+                }
+            }
+            if (quadSide == 1 || quadSide == 4)
+            {
+                Debug.Log("1 or 4");
+                transform.position = new Vector3(transform.position.x - shift, transform.position.y, transform.position.z);
+            }
+            else
+            {
+                Debug.Log("2 or 3");
+                transform.position = new Vector3(transform.position.x + shift, transform.position.y, transform.position.z);
+            }
+        }
     }
 
     //TODO correct position with size and and and other!

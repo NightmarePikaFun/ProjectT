@@ -76,9 +76,10 @@ public class CellsGenerator : MonoBehaviour
         {
             Debug.Log("Right coords and free space");
             //cellsPlace[itemCoords.x][itemCoords.y] = false;
-            inputItem.transform.position = cells[itemCoords.x][itemCoords.y].transform.position;
+            
             //cells[itemCoords.x][itemCoords.y].GetComponent<CellsScript>().SetHoldingItem(inputItem);
             int sideNumber = cells[itemCoords.x][itemCoords.y].GetComponent<CellsScript>().GetQuadSied();
+            inputItem.GetComponent<tmp_Block>().SetNewCoords(cells[itemCoords.x][itemCoords.y].transform.position, cellsSize / 2, sideNumber);
             //Debug.Log(sideNumber);
             Vector2Int itemHoldCoord = inputItem.GetComponent<tmp_Block>().tmpGetRightCoord(sideNumber);
             //Debug.Log(itemHoldCoord);
