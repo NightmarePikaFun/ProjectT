@@ -169,10 +169,6 @@ public class CellsGenerator : MonoBehaviour
         cellsPlace[inputCoords.x][inputCoords.y] = true;
     }
 
-    private void tmp()
-    {
-
-    }
     //get number
     //get center
     //check coords if all can store item
