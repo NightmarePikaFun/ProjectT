@@ -467,6 +467,8 @@ MonoBehaviour:
   chankList: []
   terrainPrefab: {fileID: 3183717689276970539, guid: 8a6e2a3686c182b46b8ea9fe47b1f5a6, type: 3}
   seed: 731113360
+  playerLoadRadius: 3
+  playerChunk: {x: 32, y: 32}
 --- !u!33 &1851088618
 MeshFilter:
   m_ObjectHideFlags: 0

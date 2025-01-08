@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GenerateChank : MonoBehaviour
@@ -17,6 +18,10 @@ public class GenerateChank : MonoBehaviour
     private GameObject terrainPrefab;
     [SerializeField]
     private int seed;
+    [SerializeField, Range(1,10)]
+    private int playerLoadRadius = 3;
+    [SerializeField]
+    private Vector2Int playerChunk;
 
     private List<TerrainMeshGenerator> terrrainMeshes;
     private List<float> randomizedValue;
@@ -43,7 +48,22 @@ public class GenerateChank : MonoBehaviour
     {
         if(createChunk)
         {
-            createChunk = false;
+            for(int i = playerChunk.y-playerLoadRadius; i <= playerChunk.y+playerLoadRadius;i++)
+            {
+                for(int j = playerChunk.x-playerLoadRadius; j <= playerChunk.x+playerLoadRadius;j++)
+                {
+                    if (chunkMesh[i,j] != null)
+                    {
+                        chunkMesh[i, j].isActive = true;
+                        chunkMesh[i, j].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        CreateChunk((ushort)i, (ushort)j);
+                    }
+                }
+            }
+            /*createChunk = false;
             GameObject newTerrain = Instantiate(terrainPrefab);
             terrrainMeshes.Add(newTerrain.GetComponent<TerrainMeshGenerator>());
             randomizedValue.Add((float)randomGenerator.NextDouble());
@@ -51,7 +71,7 @@ public class GenerateChank : MonoBehaviour
             terrrainMeshes[terrrainMeshes.Count-1].CreateTerrain(newChank);
             chankList.Add(newChank);
             if(terrrainMeshes.Count>1)
-                TerrainCompare(terrrainMeshes[terrrainMeshes.Count - 1]);
+                TerrainCompare(terrrainMeshes[terrrainMeshes.Count - 1]);*/
         }
     }
 
@@ -71,6 +91,7 @@ public class GenerateChank : MonoBehaviour
         {
             GameObject newTerrain = Instantiate(terrainPrefab);
             chunkMesh[x, y] = newTerrain.GetComponent<TerrainMeshGenerator>();
+            chunkMesh[x,y].isActive = true;
             float randomizedChunkValue = (float)randomGenerator.NextDouble();
             chunkMesh[x, y].SetSeed(randomizedChunkValue);
             chunkMesh[x, y].CreateTerrain(new Vector2Int(x, y));

@@ -31,6 +31,8 @@ public class TerrainMeshGenerator : MonoBehaviour
     float lacunarity = 2f;
     int octaves = 4;
 
+    public bool isActive = false;
+
     [SerializeField]
     Vector2Int perlinNoiseStartCoord = new Vector2Int(0,0);
 
@@ -426,6 +428,8 @@ public class TerrainMeshGenerator : MonoBehaviour
         meshGen.meshColider.sharedMesh.normals = parentSmNormals;
 
     }
+
+    //TODO add coroutine for check player not in range;
 }
 
 public enum Side
