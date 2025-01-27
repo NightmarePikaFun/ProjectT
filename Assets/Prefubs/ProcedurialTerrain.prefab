@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundScale: {x: 20, y: 20}
-  _inputMaterial: {fileID: 2100000, guid: 79c40033ac4467e4a80cbff83620720a, type: 2}
+  _inputMaterial: {fileID: 2100000, guid: aa2602452f8ac3745afb22aa0ec80013, type: 2}
   meshUp: 0
   meshDown: 0
   quadNumber: 0
