@@ -281,6 +281,11 @@ public class TerrainMeshGenerator : MonoBehaviour
         meshColider.sharedMesh = mesh;
     }
 
+    public void GetVerticesHeight(Vector2Int pos)
+    {
+
+    }
+
     public float[] GetBorder(Side side)
     {
         float[] border = new float[groundScale.x];

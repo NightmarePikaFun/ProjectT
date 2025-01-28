@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3183717689276970537}
   - component: {fileID: 3183717689276970536}
   - component: {fileID: 3183717689276970540}
-  - component: {fileID: 2354157582624787403}
+  - component: {fileID: 1332668832816187823}
   m_Layer: 0
   m_Name: ProcedurialTerrain
   m_TagString: Untagged
@@ -120,27 +120,31 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!205 &2354157582624787403
-LODGroup:
+--- !u!114 &1332668832816187823
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3183717689276970539}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.6
-    fadeTransitionWidth: 0
-    renderers: []
-  - screenRelativeHeight: 0.3
-    fadeTransitionWidth: 0
-    renderers: []
-  - screenRelativeHeight: 0.098914124
-    fadeTransitionWidth: 0
-    renderers: []
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff8a5cedf884e8941b2e1131dfdbde9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourcesPrefab:
+  - resourcePrefab: {fileID: 8689174755087648281, guid: 4b93e4b9ea438054eb7316b777f152ef, type: 3}
+    bioms: 00000000
+  - resourcePrefab: {fileID: 24547337078923802, guid: 2d45bea896fbc854e9eedabc9f005cfc, type: 3}
+    bioms: 0000000001000000
+  - resourcePrefab: {fileID: 8690656947559086172, guid: 22e32035021dbd846936d54495ae6b9c, type: 3}
+    bioms: 03000000
+  - resourcePrefab: {fileID: 6219627761833557683, guid: be2f75271837add48acf4253e18f8956, type: 3}
+    bioms: 02000000
+  - resourcePrefab: {fileID: 6409972619661285305, guid: 493e582a2d91f98429a9cc7f5b535016, type: 3}
+    bioms: 00000000
+  - resourcePrefab: {fileID: 1337936508577995952, guid: 79aebd2c7a16a1e429377bbc67720985, type: 3}
+    bioms: 01000000
+  biomeType: 0
+  spawnRange: 4
+  chankSize: 20
