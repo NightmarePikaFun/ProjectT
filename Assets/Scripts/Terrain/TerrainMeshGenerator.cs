@@ -167,7 +167,7 @@ public class TerrainMeshGenerator : MonoBehaviour
                     float px = ((float)perlinNoiseStartCoord.y/4 + (int)(j*.25f))/ 20 * freq+ perlinNoiseStartCoord.y/4,
                     py = ((float)perlinNoiseStartCoord.x/4 + (int)(i*.25f)) / 20 * freq+ perlinNoiseStartCoord.x/4;
 
-                    float perlinVal = Mathf.PerlinNoise(px, py) * 2 - 1;
+                    float perlinVal = Mathf.PerlinNoise(px+seed, py+seed) * 2 - 1;
 
                     noiseHeight += perlinVal*amplitude;
                     amplitude *= persistance;
