@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,6 +7,9 @@ using UnityEngine.UIElements;
 
 public class GenerateChank : MonoBehaviour
 {
+    //TMP
+    private GameObject Player;
+
     //TODO static seed to pseudo random (pseudo random is static)
     [SerializeField]
     private ushort chunkNumber = 64; 
@@ -20,7 +24,7 @@ public class GenerateChank : MonoBehaviour
     [SerializeField]
     private int seed;
     [SerializeField, Range(1,10)]
-    private int playerLoadRadius = 3;
+    public int playerLoadRadius = 3;
     [SerializeField]
     private Vector2Int playerChunk;
 
@@ -29,19 +33,39 @@ public class GenerateChank : MonoBehaviour
     private System.Random randomGenerator;
 
     private TerrainMeshGenerator[,] chunkMesh;
+    private int[,] chunkHeight;
+
+    public static GenerateChank Instance;
+    private List<ChunkData> activeChunk;
 
     private void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this.gameObject);
+        chunkHeight = new int[chunkNumber, chunkNumber];
         chunkMesh = new TerrainMeshGenerator[chunkNumber,chunkNumber];
         terrrainMeshes = new List<TerrainMeshGenerator>();
         randomGenerator = new System.Random(seed);
         randomizedValue = new List<float>();
+        activeChunk = new List<ChunkData>();
 
+        //TMP height set
+        chunkHeight[chunkNumber / 2 + 8, chunkNumber / 2 + 8] = 3;
+        chunkHeight[chunkNumber / 2 + 7, chunkNumber / 2 + 8] = 2;
+        chunkHeight[chunkNumber / 2 + 7, chunkNumber / 2 + 8] = 2;
+        chunkHeight[chunkNumber / 2 + 8, chunkNumber / 2 + 7] = 2;
+        chunkHeight[chunkNumber / 2 + 8, chunkNumber / 2 + 6] = 1;
         //Create start chank
         CreateChunk((ushort)(chunkNumber / 2 - 1), (ushort)(chunkNumber / 2 - 1));
         CreateChunk((ushort)(chunkNumber / 2 - 1), (ushort)(chunkNumber / 2));
         CreateChunk((ushort)(chunkNumber / 2), (ushort)(chunkNumber / 2 - 1));
         CreateChunk((ushort)(chunkNumber / 2), (ushort)(chunkNumber / 2));
+
+        StartCoroutine(ChunkUnloader());
+
+        Player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -91,7 +115,11 @@ public class GenerateChank : MonoBehaviour
         if (chunkMesh[x,y] == null)
         {
             GameObject newTerrain = Instantiate(terrainPrefab);
+            activeChunk.Add(newTerrain.GetComponent<ChunkData>());
+            newTerrain.GetComponent<ChunkData>().Load();
+            newTerrain.GetComponent<ChunkData>().SetChunkNumber(new Vector2Int(x, y));
             chunkMesh[x, y] = newTerrain.GetComponent<TerrainMeshGenerator>();
+            chunkMesh[x, y].InitTerrainMesh(chunkHeight[x, y]);
             chunkMesh[x,y].isActive = true;
             float randomizedChunkValue = (float)randomGenerator.NextDouble();
             chunkMesh[x, y].SetSeed(randomizedChunkValue);
@@ -121,10 +149,60 @@ public class GenerateChank : MonoBehaviour
         }
     }
 
+    public void LoadChunk(ushort x, ushort y)
+    {
+        if (chunkMesh[x, y] == null)
+        {
+            CreateChunk(x, y);
+        }
+        else
+        {
+            if (!chunkMesh[x, y].isActive)
+            {
+                chunkMesh[x, y].isActive = true;
+                chunkMesh[x, y].GetComponent<ChunkData>().Load();
+                activeChunk.Add(chunkMesh[x,y].GetComponent<ChunkData>());
+            }
+            //Load chunk
+        }
+    }
+
     [ContextMenu("RandomizeSeed")]
     public void RandomizeSeed()
     {
-        seed = Random.Range(int.MinValue, int.MaxValue);
+        seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+    }
+
+    private IEnumerator ChunkUnloader()
+    {
+        TimeSpan timeSpan = new TimeSpan();
+        List<ChunkData> unloadChunk = new List<ChunkData>();
+        Vector2Int chunkNumber;
+        while (true)
+        {
+            for(int i = 0; i < activeChunk.Count; i++)
+            {
+
+                timeSpan = DateTime.Now.Subtract(activeChunk[i].GetStartTime());
+                if(timeSpan.Minutes>2)
+                {
+                    if (Vector2.Distance(new Vector2(Player.transform.position.x, Player.transform.position.z),
+                        new Vector2(activeChunk[i].transform.position.x, activeChunk[i].transform.position.z)) > 86)
+                        unloadChunk.Add(activeChunk[i]);
+                    else
+                        activeChunk[i].UpdateTime();
+                }
+            }
+            foreach(ChunkData chunk in unloadChunk)
+            {
+                activeChunk.Remove(chunk);
+                chunkNumber = chunk.GetChunkNumder();
+                chunkMesh[chunkNumber.x, chunkNumber.y].isActive = false;
+                chunk.Unload();
+            }
+            unloadChunk.Clear();
+            yield return new WaitForSecondsRealtime(60);
+        }
     }
 }
 

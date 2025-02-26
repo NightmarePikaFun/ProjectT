@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 3183717689276970536}
   - component: {fileID: 3183717689276970540}
   - component: {fileID: 1332668832816187823}
+  - component: {fileID: 7936516008706826238}
+  - component: {fileID: 3333592866010819000}
   m_Layer: 0
   m_Name: ProcedurialTerrain
   m_TagString: Untagged
@@ -32,7 +34,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7512092894730330857}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -106,6 +109,8 @@ MonoBehaviour:
   mesh: {fileID: 0}
   isActive: 0
   perlinNoiseStartCoord: {x: 0, y: 0}
+  blockTMP: {fileID: 8551025915361219235, guid: 9011b5f8e28ab014e93fb7acbec6586f, type: 3}
+  generateBlock: 0
 --- !u!64 &3183717689276970540
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -141,10 +146,101 @@ MonoBehaviour:
     bioms: 03000000
   - resourcePrefab: {fileID: 6219627761833557683, guid: be2f75271837add48acf4253e18f8956, type: 3}
     bioms: 02000000
-  - resourcePrefab: {fileID: 6409972619661285305, guid: 493e582a2d91f98429a9cc7f5b535016, type: 3}
+  - resourcePrefab: {fileID: 1879042672095658972, guid: 493e582a2d91f98429a9cc7f5b535016, type: 3}
     bioms: 00000000
   - resourcePrefab: {fileID: 1337936508577995952, guid: 79aebd2c7a16a1e429377bbc67720985, type: 3}
     bioms: 01000000
   biomeType: 0
   spawnRange: 4
   chankSize: 20
+--- !u!65 &7936516008706826238
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3183717689276970539}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 20, y: 40, z: 20}
+  m_Center: {x: 10, y: 0, z: 10}
+--- !u!114 &3333592866010819000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3183717689276970539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef65ab268ff978d47beb00dfa9781610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &7286359849243043914
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3183717689276970543}
+    m_Modifications:
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901164, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: size
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 963217275738901165, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+      propertyPath: m_Name
+      value: WaterGenerator
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+--- !u!4 &7512092894730330857 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 963217275738901155, guid: 726783cd331a2e646880857289cc57f4, type: 3}
+  m_PrefabInstance: {fileID: 7286359849243043914}
+  m_PrefabAsset: {fileID: 0}

@@ -21,6 +21,8 @@ public class TerrainMeshGenerator : MonoBehaviour
 
     private float height = 0.5f;
 
+    public int chunkHeight = 0;
+
     public Mesh mesh;
     Vector3[] vertices = new Vector3[4];
 
@@ -39,6 +41,11 @@ public class TerrainMeshGenerator : MonoBehaviour
     MeshCollider meshColider;
 
     private Vector2Int chunkCoord;
+
+    [SerializeField]
+    private GameObject blockTMP;
+    [SerializeField]
+    private bool generateBlock = false;
     // Start is called before the first frame update
     void Awake()
     {
@@ -122,6 +129,11 @@ public class TerrainMeshGenerator : MonoBehaviour
         }
     }
 
+    public void InitTerrainMesh(int height)
+    {
+        chunkHeight = height;
+    }
+
     public void SetSeed(float inSeed)
     {
         seed = inSeed;
@@ -177,17 +189,26 @@ public class TerrainMeshGenerator : MonoBehaviour
                 //float yCoord = Mathf.Clamp(noiseHeight, -10000, 10000);
                 //float yCoord = Mathf.PerlinNoise((perlinNoiseStartCoord.y+(int)(j*0.25f)) * seed, (perlinNoiseStartCoord.x+ (int)(i *0.25f)) * seed)*1.5f;
 
-                vertices[i * groundScale.x + j] = new Vector3(j, noiseHeight*0.2f, i);
+                vertices[i * groundScale.x + j] = new Vector3(j, noiseHeight*0.1f+ chunkHeight, i);
                 uv[i * groundScale.x + j] = new Vector2(j, i);
             }
         }
         //tN -> triangleNumber
         //For new normals
+        GameObject parent = new GameObject("parent");
 
+        parent.transform.parent = this.transform;
         for(int tN = 0, y = 0; y < groundScale.x - 1; y++)
         {
             for(int x = 0; x < groundScale.y - 1; x++)
             {
+                if (generateBlock)
+                {
+                    GameObject newObject = Instantiate(blockTMP, parent.transform);
+                    newObject.transform.position = new Vector3(x + 0.5f + transform.position.x, (vertices[groundScale.y * y + x].y + vertices[groundScale.y * y + groundScale.x + x].y +
+                        vertices[groundScale.y * y + x + 1].y + vertices[groundScale.y * y + groundScale.x + x + 1].y) / 4, y + 0.5f + transform.position.z);
+                    newObject.GetComponent<TMP_Block_Script>().pos = new Vector2Int(x,y);
+                }
                 triangles[tN] = groundScale.y * y + x;
                 triangles[tN + 1] = groundScale.y * y + groundScale.x + x;
                 triangles[tN + 2] = groundScale.y * y + groundScale.x + x + 1;
@@ -209,7 +230,7 @@ public class TerrainMeshGenerator : MonoBehaviour
     {
         float[] parentBorderValue = parentMesh.GetBorder(parentBorderSide);
         float[] borderValue = GetBorder(borderSide);
-        Debug.Log("DoRecalc");
+        //Debug.Log("DoRecalc");
         float midCoef;
         switch (borderSide)
         {
@@ -276,13 +297,20 @@ public class TerrainMeshGenerator : MonoBehaviour
     public void ChangeVertices(int verticesNumber, float height)
     {
         vertices[verticesNumber].y = height;
-        Debug.Log(mesh.normals[verticesNumber]);
+        //Debug.Log(mesh.normals[verticesNumber]);
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
     }
 
-    public void GetVerticesHeight(Vector2Int pos)
+    public float GetVerticesHeight(Vector2Int pos)
     {
+        int index = pos.y * groundScale.y + pos.x;
+        float retHeight = vertices[index].y;
+        retHeight += vertices[index + groundScale.x].y;
+        retHeight += vertices[index + groundScale.x + 1].y;
+        retHeight += vertices[index+ 1].y;
+        retHeight = retHeight / 4;
+        return retHeight;
 
     }
 

@@ -15,6 +15,13 @@ public class ResourcesGenerator : MonoBehaviour
     [SerializeField]
     public int chankSize = 8;
 
+    TerrainMeshGenerator meshGen;
+
+    private void Awake()
+    {
+        meshGen = GetComponent<TerrainMeshGenerator>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,8 +52,8 @@ public class ResourcesGenerator : MonoBehaviour
             int weight = UnityEngine.Random.Range(1, 6); //TODO remake it
             Vector2Int startCoord = new Vector2Int((int)transform.position.x, (int)transform.position.z);
             
-            int x = UnityEngine.Random.Range(0, chankSize),
-                    z = UnityEngine.Random.Range(0, chankSize);
+            int x = UnityEngine.Random.Range(0, chankSize-1),
+                    z = UnityEngine.Random.Range(0, chankSize-1);
             //occuped check
             Vector3Int coord = new Vector3Int(x + startCoord.x, 0, z + startCoord.y);//Zero is temporary. Need change to mesh point height. X and Z also need get in Mesh
             SpawnObject(item, coord, ref occupedPos);
@@ -62,11 +69,20 @@ public class ResourcesGenerator : MonoBehaviour
 
     private void SpawnObject(GameObject spawnObject, Vector3Int startPosition, ref List<Vector3> occupedPos, int spread = 0)
     {
-        if(spread != 0)
+        if (spread != 0)
             startPosition += new Vector3Int(UnityEngine.Random.Range(-spread, spread), 0, UnityEngine.Random.Range(-spread, spread));
         //occuped check
+        int x = startPosition.x - (int)transform.position.x,
+            z = startPosition.z - (int)transform.position.z;
+        float y;
+        if (x < 0 || z < 0 || x > 20 || z > 20)
+            return;
         GameObject newObject = Instantiate(spawnObject);
-        newObject.transform.position = startPosition-new Vector3(0.5f,0,0.5f);
+        newObject.GetComponent<TMP_Block_Script>().pos = new Vector2Int(x, z);
+        Vector3 spawnPos = startPosition - new Vector3(-0.5f, 0, -0.5f);
+        y = meshGen.GetVerticesHeight(new Vector2Int(x, z));
+        spawnPos.y = y + 0.5f;
+        newObject.transform.position = spawnPos;
         occupedPos.Add(newObject.transform.position);
     }
 }
