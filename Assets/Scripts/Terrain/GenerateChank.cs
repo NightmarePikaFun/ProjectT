@@ -10,6 +10,9 @@ public class GenerateChank : MonoBehaviour
     //TMP
     private GameObject Player;
 
+
+    [SerializeField]
+    private int chunkSize = 20;
     //TODO static seed to pseudo random (pseudo random is static)
     [SerializeField]
     private ushort chunkNumber = 64; 
@@ -203,6 +206,22 @@ public class GenerateChank : MonoBehaviour
             unloadChunk.Clear();
             yield return new WaitForSecondsRealtime(60);
         }
+    }
+    
+    public float GetHeight(Vector2Int point)
+    {
+        Vector2Int selectedChunkNumber = (point / chunkSize);
+        if (selectedChunkNumber.x < 0 || selectedChunkNumber.y < 0 || selectedChunkNumber.x > chunkMesh.GetLength(0) || selectedChunkNumber.y > chunkNumber)
+            return -1000;
+        return chunkMesh[(int)selectedChunkNumber.x, (int)selectedChunkNumber.y].GetHeight(point - selectedChunkNumber * chunkNumber);
+    }
+
+    public void UpHeight(Vector2Int point)
+    {
+        Vector2Int selectedChunkNumber = new Vector2Int(point.x / chunkSize, point.y/chunkSize);
+        if (selectedChunkNumber.x < 0 || selectedChunkNumber.y < 0 || selectedChunkNumber.x > chunkMesh.GetLength(0) || selectedChunkNumber.y > chunkNumber)
+            return;
+        chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].UpHeight(point- selectedChunkNumber * chunkSize);
     }
 }
 

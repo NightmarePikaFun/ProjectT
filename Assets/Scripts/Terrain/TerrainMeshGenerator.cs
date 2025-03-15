@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class TerrainMeshGenerator : MonoBehaviour
 {
@@ -378,6 +379,29 @@ public class TerrainMeshGenerator : MonoBehaviour
                 break;
         }
         return border;
+    }
+
+    public float GetHeight(Vector2Int point)
+    {
+        float returnHeight = 0;
+        point.y *= groundScale.y;
+        returnHeight += vertices[point.x + point.y].y;
+        returnHeight += vertices[point.x + point.y + 1].y;
+        returnHeight += vertices[point.x + point.y + groundScale.y].y;
+        returnHeight += vertices[point.x + point.y + groundScale.y+1].y;
+        returnHeight /= 4;
+        return returnHeight;
+    }
+
+    //TODO is TMP need remake this function
+    public void UpHeight(Vector2Int point)
+    {
+        vertices[point.x + point.y * groundScale.y].y += 1;
+        vertices[point.x + point.y * groundScale.y+1].y += 1;
+        vertices[point.x + (point.y+1) * groundScale.y].y += 1;
+        vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;
+        mesh.vertices = vertices;
+        meshColider.sharedMesh = mesh;
     }
 
     #region ContextMenuToZero
