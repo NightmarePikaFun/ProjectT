@@ -394,15 +394,101 @@ public class TerrainMeshGenerator : MonoBehaviour
     }
 
     //TODO is TMP need remake this function
+    #region heightChange
     public void UpHeight(Vector2Int point)
     {
-        vertices[point.x + point.y * groundScale.y].y += 1;
-        vertices[point.x + point.y * groundScale.y+1].y += 1;
-        vertices[point.x + (point.y+1) * groundScale.y].y += 1;
-        vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;
+        //TODO if border chunk change borde in another chunk
+        float max = float.NegativeInfinity;
+        float equalNumber = 0;
+        for(int i = 0; i < 2; i++)
+        {
+            for(int j = 0 ; j < 2; j++)
+            {
+                if (max < vertices[point.x + (point.y + j) * groundScale.y + i].y)
+                    max = vertices[point.x + (point.y + j) * groundScale.y + i].y;
+                if(max == vertices[point.x + (point.y + j) * groundScale.y + i].y)
+                    equalNumber++;
+            }
+        }
+        for(int i = 0; i < 2; i++)
+        {
+            for(int j = 0 ; j < 2; j++)
+            {
+                if(equalNumber==4)
+                    vertices[point.x + (point.y + j) * groundScale.y + i].y += 0.25f;
+                else
+                    vertices[point.x + (point.y + j) * groundScale.y + i].y = max;
+            }
+        }
+        mesh.vertices = vertices;
+        meshColider.sharedMesh = mesh;
+
+        /*vertices[point.x + point.y * groundScale.y].y += 1;
+vertices[point.x + point.y * groundScale.y+1].y += 1;
+vertices[point.x + (point.y+1) * groundScale.y].y += 1;
+vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
+    }
+
+    public void DownHeight(Vector2Int point)
+    {
+        //TODO if border chunk change borde in another chunk
+        float min = float.PositiveInfinity;
+        float equalNumber = 0;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                if (min > vertices[point.x + (point.y + j) * groundScale.y + i].y)
+                    min = vertices[point.x + (point.y + j) * groundScale.y + i].y;
+                if (min == vertices[point.x + (point.y + j) * groundScale.y + i].y)
+                    equalNumber++;
+            }
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                if(equalNumber == 4)
+                    vertices[point.x + (point.y + j) * groundScale.y + i].y -= 0.25f;
+                else
+                    vertices[point.x + (point.y + j) * groundScale.y + i].y = min;
+            }
+        }
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
     }
+
+    public void MiddleHeight(Vector2Int point)
+    {
+        float middle = 0;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                    middle += vertices[point.x + (point.y + j) * groundScale.y + i].y;
+            }
+        }
+        middle /= 4;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                vertices[point.x + (point.y + j) * groundScale.y + i].y = middle;
+            }
+        }
+        mesh.vertices = vertices;
+        meshColider.sharedMesh = mesh;
+    }
+
+    public void PointHeightUp(Vector2 point)
+    {
+
+    }
+    public void PointHeightDown(Vector2 point)
+    {
+
+    }
+    #endregion
 
     #region ContextMenuToZero
     [ContextMenu("ZeroLeft")]

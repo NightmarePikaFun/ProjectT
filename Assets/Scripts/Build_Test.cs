@@ -38,9 +38,17 @@ public class Build_Test : MonoBehaviour
             worldPosition = VectorRound(worldPosition);
             worldPosition.y = GenerateChank.Instance.GetHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z))+0.5f;
             ghostBlock.transform.position = worldPosition;
-            if(Input.GetKeyDown(KeyCode.H)) 
+            if(Input.GetKeyDown(KeyCode.KeypadPlus)) 
             {
-                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z));
+                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Up);
+            }
+            else if (Input.GetKeyDown(KeyCode.KeypadMinus))
+            {
+                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Down);
+            }
+            else if (Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Middle);
             }
 
         }
@@ -53,4 +61,11 @@ public class Build_Test : MonoBehaviour
         inputVector.z = Mathf.Round(inputVector.z / gridSize) * gridSize - 0.5f;
         return inputVector;
     }
+}
+
+public enum Terraformin_Type
+{
+    Up,
+    Down,
+    Middle
 }
