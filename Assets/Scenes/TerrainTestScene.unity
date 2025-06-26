@@ -19474,6 +19474,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4090066857111484567, guid: bab6993269bea044db1bae7101e5f0fd, type: 3}
+      propertyPath: WorldName
+      value: TestWorld
+      objectReference: {fileID: 0}
     - target: {fileID: 4090066857111484569, guid: bab6993269bea044db1bae7101e5f0fd, type: 3}
       propertyPath: m_Name
       value: TerrainGenerator

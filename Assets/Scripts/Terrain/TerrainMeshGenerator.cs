@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
+
 
 public class TerrainMeshGenerator : MonoBehaviour
 {
@@ -47,9 +49,14 @@ public class TerrainMeshGenerator : MonoBehaviour
     private GameObject blockTMP;
     [SerializeField]
     private bool generateBlock = false;
+
+    public TerrainChankData saveData;
+
+
     // Start is called before the first frame update
     void Awake()
     {
+        saveData = new TerrainChankData();
         groundScale += new Vector2Int(1, 1);
         meshColider = GetComponent<MeshCollider>();
         mesh = new Mesh();
@@ -138,6 +145,7 @@ public class TerrainMeshGenerator : MonoBehaviour
     public void SetSeed(float inSeed)
     {
         seed = inSeed;
+        saveData.seed = seed;
     }
 
     public void CreateTerrain(Vector2Int coord)
@@ -145,7 +153,27 @@ public class TerrainMeshGenerator : MonoBehaviour
         chunkCoord = coord;
         transform.position = new Vector3(coord.x * 20, 0, coord.y * 20);
         perlinNoiseStartCoord = coord * 20;
+
+        saveData.perlinNoiseStartCoord.Convert(perlinNoiseStartCoord);
+        saveData.chunkCoord.Convert(chunkCoord);
+
         InitMesh();
+    }
+
+    public void LoadTerrain(Vector2Int coord, TerrainChankData chankData)
+    {
+        saveData = chankData;
+        chunkCoord = coord;
+        transform.position = new Vector3(coord.x*20, 0, coord.y*20);
+        perlinNoiseStartCoord = coord * 20;
+
+        vertices = saveData.GetVertices();
+        mesh.vertices = saveData.GetVertices();
+        mesh.triangles = saveData.GetTriangles();
+        mesh.uv = saveData.GetUv();
+        mesh.normals = saveData.GetNormals();
+        //mesh.RecalculateNormals();
+        meshColider.sharedMesh = mesh;
     }
 
     private void ChangeMesh(int modifaer)
@@ -156,6 +184,9 @@ public class TerrainMeshGenerator : MonoBehaviour
         vertices[(int)(quadNumber / groundScale.x) + quadNumber + groundScale.x].y += height * modifaer; //= new Vector3(0, height, 1);
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
+
     }
 
     private void InitMesh()
@@ -220,11 +251,14 @@ public class TerrainMeshGenerator : MonoBehaviour
                 tN += 6;
             }
         }
+
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uv;
         mesh.RecalculateNormals();
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
     }
 
     public void RecalcChunkBorder(TerrainMeshGenerator parentMesh, Side parentBorderSide, Side borderSide)
@@ -263,6 +297,10 @@ public class TerrainMeshGenerator : MonoBehaviour
         }
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
+
+
         RecalcNormals(parentMesh.GetBorderNormals(parentBorderSide),borderSide, parentMesh);
     }
 
@@ -293,6 +331,9 @@ public class TerrainMeshGenerator : MonoBehaviour
         vertices[verticesNumber].y = (vertices[verticesNumber].y + height) / 2;
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
+
     }
 
     public void ChangeVertices(int verticesNumber, float height)
@@ -301,6 +342,9 @@ public class TerrainMeshGenerator : MonoBehaviour
         //Debug.Log(mesh.normals[verticesNumber]);
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
+
     }
 
     public float GetVerticesHeight(Vector2Int pos)
@@ -423,6 +467,8 @@ public class TerrainMeshGenerator : MonoBehaviour
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
 
+        saveData.AddMesh(mesh);
+
         /*vertices[point.x + point.y * groundScale.y].y += 1;
 vertices[point.x + point.y * groundScale.y+1].y += 1;
 vertices[point.x + (point.y+1) * groundScale.y].y += 1;
@@ -456,6 +502,9 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
         }
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
+
     }
 
     public void MiddleHeight(Vector2Int point)
@@ -478,6 +527,9 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
         }
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
+
     }
 
     public void PointHeightUp(Vector2 point)
@@ -500,6 +552,9 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
         }
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
+
     }
 
     [ContextMenu("ZeroRight")]
@@ -511,6 +566,8 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
         }
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
     }
 
 
@@ -523,6 +580,8 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
         }
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
     }
 
     [ContextMenu("ZeroTop")]
@@ -534,6 +593,8 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
         }
         mesh.vertices = vertices;
         meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
     }
     #endregion
 
@@ -573,6 +634,8 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
     }
 
     //TODO add coroutine for check player not in range;
+
+
 }
 
 public enum Side

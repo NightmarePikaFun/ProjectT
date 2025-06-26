@@ -10,6 +10,8 @@ public class GenerateChank : MonoBehaviour
     //TMP
     private GameObject Player;
 
+    [SerializeField]
+    private string WorldName;
 
     [SerializeField]
     private int chunkSize = 20;
@@ -55,6 +57,19 @@ public class GenerateChank : MonoBehaviour
         activeChunk = new List<ChunkData>();
 
         //TMP height set
+        
+
+        Serializer.SetWorldName(WorldName);
+        Serializer.WorldSeed = seed;
+
+        StartCoroutine(ChunkUnloader());
+
+        Player = GameObject.FindGameObjectWithTag("Player");
+    }
+
+    [ContextMenu("Generate world")]
+    private void Generate()
+    {
         chunkHeight[chunkNumber / 2 + 8, chunkNumber / 2 + 8] = 3;
         chunkHeight[chunkNumber / 2 + 7, chunkNumber / 2 + 8] = 2;
         chunkHeight[chunkNumber / 2 + 7, chunkNumber / 2 + 8] = 2;
@@ -65,10 +80,6 @@ public class GenerateChank : MonoBehaviour
         CreateChunk((ushort)(chunkNumber / 2 - 1), (ushort)(chunkNumber / 2));
         CreateChunk((ushort)(chunkNumber / 2), (ushort)(chunkNumber / 2 - 1));
         CreateChunk((ushort)(chunkNumber / 2), (ushort)(chunkNumber / 2));
-
-        StartCoroutine(ChunkUnloader());
-
-        Player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -205,6 +216,37 @@ public class GenerateChank : MonoBehaviour
             }
             unloadChunk.Clear();
             yield return new WaitForSecondsRealtime(60);
+        }
+    }
+
+    [ContextMenu("Save world")]
+    private void SaveWorld()
+    {
+        Serializer.SaveWorld(chunkMesh);
+    }
+    [ContextMenu("Load world")]
+    private void LoadWorld()
+    {
+        TerrainChankData[,] saveChankData = Serializer.LoadWorld();
+        if (saveChankData == null)
+            return;
+        for (int i = 0; i < chunkMesh.GetLength(0); i++)
+        {
+            for(int j = 0; j < chunkMesh.GetLength(1); j++)
+            {
+                if (saveChankData[i, j] != null)
+                {
+                    GameObject newTerrain = Instantiate(terrainPrefab);
+                    activeChunk.Add(newTerrain.GetComponent<ChunkData>());
+                    newTerrain.GetComponent<ChunkData>().Load();
+                    newTerrain.GetComponent<ChunkData>().SetChunkNumber(new Vector2Int(i, j));
+                    chunkMesh[i, j] = newTerrain.GetComponent<TerrainMeshGenerator>();
+                    chunkMesh[i, j].InitTerrainMesh(chunkHeight[i, j]);
+                    chunkMesh[i, j].isActive = true;
+                    chunkMesh[i, j].SetSeed(saveChankData[i, j].seed);
+                    chunkMesh[i, j].LoadTerrain(new Vector2Int(i,j), saveChankData[i,j]);
+                }
+            }
         }
     }
     
