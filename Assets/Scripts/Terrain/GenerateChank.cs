@@ -258,22 +258,45 @@ public class GenerateChank : MonoBehaviour
         return chunkMesh[(int)selectedChunkNumber.x, (int)selectedChunkNumber.y].GetHeight(point - selectedChunkNumber * chunkSize);
     }
 
-    public void UpHeight(Vector2Int point, Terraformin_Type terType)
+    public void UpHeight(Vector2Int point, Terraformin_Type terType, bool retro = false)
     {
         Vector2Int selectedChunkNumber = new Vector2Int(point.x / chunkSize, point.y/chunkSize);
         if (selectedChunkNumber.x < 0 || selectedChunkNumber.y < 0 || selectedChunkNumber.x > chunkMesh.GetLength(0) || selectedChunkNumber.y > chunkNumber)
             return;
+        List<Side> outputSide = new List<Side>();
         switch(terType)
         {
             case Terraformin_Type.Up:
-                chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].UpHeight(point - selectedChunkNumber * chunkSize);
+                outputSide = chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].UpHeight(point - selectedChunkNumber * chunkSize);
                 break;
             case Terraformin_Type.Down:
-                chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].DownHeight(point - selectedChunkNumber * chunkSize);
+                outputSide = chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].DownHeight(point - selectedChunkNumber * chunkSize);
                 break;
             case Terraformin_Type.Middle:
-                chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].MiddleHeight(point - selectedChunkNumber * chunkSize);
+                outputSide = chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].MiddleHeight(point - selectedChunkNumber * chunkSize);
                 break;
+        }
+        if (!retro)
+            return;
+        //TODO: need to edit scaling border cells in chank. Calc border chank same may be wrong. Need create another algorythm
+        foreach(Side side in outputSide)
+        {
+            switch (side)
+            {
+                case Side.Top:
+                    point.y += 1;
+                    break;
+                case Side.Bottom:
+                    point.y -= 1;
+                    break;
+                case Side.Left:
+                    point.x += 1;
+                    break;
+                case Side.Right:
+                    point.x -= 1;
+                    break;
+            }
+            UpHeight(point, terType);
         }
         
     }

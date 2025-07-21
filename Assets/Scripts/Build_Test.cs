@@ -40,15 +40,15 @@ public class Build_Test : MonoBehaviour
             ghostBlock.transform.position = worldPosition;
             if(Input.GetKeyDown(KeyCode.KeypadPlus)) 
             {
-                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Up);
+                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Up, true);
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Down);
+                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Down, true);
             }
             else if (Input.GetKeyDown(KeyCode.KeypadEnter))
             {
-                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Middle);
+                GenerateChank.Instance.UpHeight(new Vector2Int((int)worldPosition.x, (int)worldPosition.z), Terraformin_Type.Middle, true);
             }
 
         }

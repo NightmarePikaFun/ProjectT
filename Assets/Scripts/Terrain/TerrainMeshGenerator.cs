@@ -439,7 +439,7 @@ public class TerrainMeshGenerator : MonoBehaviour
 
     //TODO is TMP need remake this function
     #region heightChange
-    public void UpHeight(Vector2Int point)
+    public List<Side> UpHeight(Vector2Int point)
     {
         //TODO if border chunk change borde in another chunk
         float max = float.NegativeInfinity;
@@ -469,13 +469,14 @@ public class TerrainMeshGenerator : MonoBehaviour
 
         saveData.AddMesh(mesh);
 
+        return CheckSide(point);
         /*vertices[point.x + point.y * groundScale.y].y += 1;
 vertices[point.x + point.y * groundScale.y+1].y += 1;
 vertices[point.x + (point.y+1) * groundScale.y].y += 1;
 vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
     }
 
-    public void DownHeight(Vector2Int point)
+    public List<Side> DownHeight(Vector2Int point)
     {
         //TODO if border chunk change borde in another chunk
         float min = float.PositiveInfinity;
@@ -505,9 +506,10 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
 
         saveData.AddMesh(mesh);
 
+        return CheckSide(point);
     }
 
-    public void MiddleHeight(Vector2Int point)
+    public List<Side> MiddleHeight(Vector2Int point)
     {
         float middle = 0;
         for (int i = 0; i < 2; i++)
@@ -530,6 +532,21 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
 
         saveData.AddMesh(mesh);
 
+        return CheckSide(point);
+    }
+
+    private List<Side> CheckSide(Vector2Int point)
+    {
+        List<Side> retSide = new List<Side>();
+        if (point.x <= 0)
+            retSide.Add(Side.Right);
+        if (point.y <= 0)
+            retSide.Add(Side.Bottom);
+        if(point.x >= groundScale.x-2)
+            retSide.Add(Side.Left);
+        if (point.y >= groundScale.y - 2)
+            retSide.Add(Side.Top);
+        return retSide;
     }
 
     public void PointHeightUp(Vector2 point)
@@ -643,5 +660,6 @@ public enum Side
     Left,
     Right,
     Top,
-    Bottom
+    Bottom,
+    None
 }
