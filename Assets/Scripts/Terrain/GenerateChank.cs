@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -278,27 +279,44 @@ public class GenerateChank : MonoBehaviour
         }
         if (!retro)
             return;
+        List<Vector2Int> worldPoints = new List<Vector2Int>();
+        List<int[]> chankPoints = new List<int[]>();
         //TODO: need to edit scaling border cells in chank. Calc border chank same may be wrong. Need create another algorythm
         foreach(Side side in outputSide)
         {
             switch (side)
             {
                 case Side.Top:
-                    point.y += 1;
+                    worldPoints.Add(new Vector2Int(0, 1));
+                    chankPoints.Add(new int[] { 2, 3 });
+
                     break;
                 case Side.Bottom:
-                    point.y -= 1;
+                    worldPoints.Add(new Vector2Int(0, -1));
+                    chankPoints.Add(new int[] { 0, 1 });
                     break;
                 case Side.Left:
-                    point.x += 1;
+                    worldPoints.Add(new Vector2Int(1, 0));
+                    chankPoints.Add(new int[] { 1, 3 });
                     break;
                 case Side.Right:
-                    point.x -= 1;
+                    worldPoints.Add(new Vector2Int(-1, 0));
+                    chankPoints.Add(new int[] { 0, 2 });
                     break;
             }
             UpHeight(point, terType);
         }
-        
+        if(outputSide.Count > 1)
+        {
+            //UpHeight(worldPoints[0] + worldPoints[1],)
+            int[] tmp = chankPoints[0].Intersect(chankPoints[1]).ToArray();
+            string tmp_s = "";
+            for(int i = 0; i < tmp.Length; i++)
+            {
+                tmp_s+= tmp[i]+" ";
+            }
+            Debug.Log(tmp_s);
+        }
     }
 }
 
