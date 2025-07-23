@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
@@ -439,9 +441,8 @@ public class TerrainMeshGenerator : MonoBehaviour
 
     //TODO is TMP need remake this function
     #region heightChange
-    public List<Side> UpHeight(Vector2Int point)
+    public List<Side> UpHeight(Vector2Int point, out float height)
     {
-        //TODO if border chunk change borde in another chunk
         float max = float.NegativeInfinity;
         float equalNumber = 0;
         for(int i = 0; i < 2; i++)
@@ -454,6 +455,7 @@ public class TerrainMeshGenerator : MonoBehaviour
                     equalNumber++;
             }
         }
+        height = max;
         for(int i = 0; i < 2; i++)
         {
             for(int j = 0 ; j < 2; j++)
@@ -533,6 +535,23 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
         saveData.AddMesh(mesh);
 
         return CheckSide(point);
+    }
+
+    public void ChangeHeight(Vector2Int point, int[] quadNumber, float height)
+    {
+        int index = 0;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                if(quadNumber.Contains(index++))
+                    vertices[point.x + (point.y + j) * groundScale.y + i].y += 0.25f;
+            }
+        }
+        mesh.vertices = vertices;
+        meshColider.sharedMesh = mesh;
+
+        saveData.AddMesh(mesh);
     }
 
     private List<Side> CheckSide(Vector2Int point)

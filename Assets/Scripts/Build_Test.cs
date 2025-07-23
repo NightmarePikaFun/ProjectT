@@ -12,6 +12,8 @@ public class Build_Test : MonoBehaviour
     private Vector3 worldPosition;
     Plane plane = new Plane(Vector3.up, 0);
 
+    
+
     private bool canBuild;
     // Start is called before the first frame update
     void Start()

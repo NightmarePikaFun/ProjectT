@@ -265,10 +265,11 @@ public class GenerateChank : MonoBehaviour
         if (selectedChunkNumber.x < 0 || selectedChunkNumber.y < 0 || selectedChunkNumber.x > chunkMesh.GetLength(0) || selectedChunkNumber.y > chunkNumber)
             return;
         List<Side> outputSide = new List<Side>();
+        float height = 0;
         switch(terType)
         {
             case Terraformin_Type.Up:
-                outputSide = chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].UpHeight(point - selectedChunkNumber * chunkSize);
+                outputSide = chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].UpHeight(point - selectedChunkNumber * chunkSize, out height);
                 break;
             case Terraformin_Type.Down:
                 outputSide = chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].DownHeight(point - selectedChunkNumber * chunkSize);
@@ -288,34 +289,51 @@ public class GenerateChank : MonoBehaviour
             {
                 case Side.Top:
                     worldPoints.Add(new Vector2Int(0, 1));
-                    chankPoints.Add(new int[] { 2, 3 });
-
+                    chankPoints.Add(new int[] { 0, 2 });
                     break;
                 case Side.Bottom:
                     worldPoints.Add(new Vector2Int(0, -1));
-                    chankPoints.Add(new int[] { 0, 1 });
+                    chankPoints.Add(new int[] { 1, 3 });
                     break;
                 case Side.Left:
                     worldPoints.Add(new Vector2Int(1, 0));
-                    chankPoints.Add(new int[] { 1, 3 });
+                    chankPoints.Add(new int[] { 0, 1 });
                     break;
                 case Side.Right:
                     worldPoints.Add(new Vector2Int(-1, 0));
-                    chankPoints.Add(new int[] { 0, 2 });
+                    chankPoints.Add(new int[] { 2, 3 });
                     break;
             }
-            UpHeight(point, terType);
+            //UpHeight(point, terType);
         }
         if(outputSide.Count > 1)
         {
-            //UpHeight(worldPoints[0] + worldPoints[1],)
-            int[] tmp = chankPoints[0].Intersect(chankPoints[1]).ToArray();
-            string tmp_s = "";
-            for(int i = 0; i < tmp.Length; i++)
-            {
-                tmp_s+= tmp[i]+" ";
-            }
-            Debug.Log(tmp_s);
+            worldPoints.Add(worldPoints[0] + worldPoints[1]);
+            chankPoints.Add(chankPoints[0].Intersect(chankPoints[1]).ToArray());
+
+        }
+        for(int i = 0; i < chankPoints.Count;i++)
+        {
+            UpHeight(point+worldPoints[i], terType ,chankPoints[i], height);
+        }
+    }
+
+    public void UpHeight(Vector2Int point, Terraformin_Type terType, int[] quadNumber, float height)
+    {
+        Vector2Int selectedChunkNumber = new Vector2Int(point.x / chunkSize, point.y / chunkSize);
+        if (selectedChunkNumber.x < 0 || selectedChunkNumber.y < 0 || selectedChunkNumber.x > chunkMesh.GetLength(0) || selectedChunkNumber.y > chunkNumber)
+            return;
+        switch (terType)
+        {
+            case Terraformin_Type.Up:
+                chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].ChangeHeight(point - selectedChunkNumber * chunkSize, quadNumber, height);
+                break;
+            case Terraformin_Type.Down:
+                chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].DownHeight(point - selectedChunkNumber * chunkSize);
+                break;
+            case Terraformin_Type.Middle:
+                chunkMesh[selectedChunkNumber.x, selectedChunkNumber.y].MiddleHeight(point - selectedChunkNumber * chunkSize);
+                break;
         }
     }
 }
