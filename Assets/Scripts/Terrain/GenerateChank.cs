@@ -265,7 +265,7 @@ public class GenerateChank : MonoBehaviour
         if (selectedChunkNumber.x < 0 || selectedChunkNumber.y < 0 || selectedChunkNumber.x > chunkMesh.GetLength(0) || selectedChunkNumber.y > chunkNumber)
             return;
         List<Side> outputSide = new List<Side>();
-        float height = 0;
+        float[] height = new float[4];
         switch(terType)
         {
             case Terraformin_Type.Up:
@@ -318,7 +318,7 @@ public class GenerateChank : MonoBehaviour
         }
     }
 
-    public void UpHeight(Vector2Int point, Terraformin_Type terType, int[] quadNumber, float height)
+    public void UpHeight(Vector2Int point, Terraformin_Type terType, int[] quadNumber, float[] height)
     {
         Vector2Int selectedChunkNumber = new Vector2Int(point.x / chunkSize, point.y / chunkSize);
         if (selectedChunkNumber.x < 0 || selectedChunkNumber.y < 0 || selectedChunkNumber.x > chunkMesh.GetLength(0) || selectedChunkNumber.y > chunkNumber)

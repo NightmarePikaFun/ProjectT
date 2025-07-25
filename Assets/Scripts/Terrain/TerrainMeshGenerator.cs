@@ -441,7 +441,7 @@ public class TerrainMeshGenerator : MonoBehaviour
 
     //TODO is TMP need remake this function
     #region heightChange
-    public List<Side> UpHeight(Vector2Int point, out float height)
+    public List<Side> UpHeight(Vector2Int point, out float[] height)
     {
         float max = float.NegativeInfinity;
         float equalNumber = 0;
@@ -455,15 +455,21 @@ public class TerrainMeshGenerator : MonoBehaviour
                     equalNumber++;
             }
         }
-        height = max;
+        height = new float[4];
         for(int i = 0; i < 2; i++)
         {
             for(int j = 0 ; j < 2; j++)
             {
-                if(equalNumber==4)
+                if (equalNumber == 4)
+                {
                     vertices[point.x + (point.y + j) * groundScale.y + i].y += 0.25f;
+                    height[3 - (i*2 + j)] = vertices[point.x + (point.y + j) * groundScale.y + i].y;
+                }
                 else
+                {
                     vertices[point.x + (point.y + j) * groundScale.y + i].y = max;
+                    height[3 - (i*2 + j)] = vertices[point.x + (point.y + j) * groundScale.y + i].y;
+                }
             }
         }
         mesh.vertices = vertices;
@@ -537,7 +543,7 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
         return CheckSide(point);
     }
 
-    public void ChangeHeight(Vector2Int point, int[] quadNumber, float height)
+    public void ChangeHeight(Vector2Int point, int[] quadNumber, float[] height)
     {
         int index = 0;
         for (int i = 0; i < 2; i++)
@@ -545,7 +551,7 @@ vertices[point.x + (point.y+1) * groundScale.y+1].y += 1;*/
             for (int j = 0; j < 2; j++)
             {
                 if(quadNumber.Contains(index++))
-                    vertices[point.x + (point.y + j) * groundScale.y + i].y += 0.25f;
+                    vertices[point.x + (point.y + j) * groundScale.y + i].y = height[i+j];
             }
         }
         mesh.vertices = vertices;
